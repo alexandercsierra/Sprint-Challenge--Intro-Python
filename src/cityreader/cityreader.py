@@ -1,6 +1,13 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
+class City:
+  def __init__(self, name, lat, lon):
+    self.name=name
+    self.lat=lat
+    self.lon=lon
 
+  def __str__(self):
+    return f'{self.name} {self.lat} {self.lon}'
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -16,18 +23,30 @@
 # should not be loaded into a City object.
 cities = []
 
+
+import csv
+
+
+
 def cityreader(cities=[]):
   # TODO Implement the functionality to read from the 'cities.csv' file
   # For each city record, create a new City instance and add it to the 
   # `cities` list
-    
+  with open('cities.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    lines = list(csv_reader)
+    for i in range(1, len(lines)):
+            cities.append(City(lines[i][0], float(lines[i][3]), float(lines[i][4])))
     return cities
 
 cityreader(cities)
 
 # Print the list of cities (name, lat, lon), 1 record per line.
-for c in cities:
-    print(c)
+# for c in cities:
+#     print(c)
+
+
+
 
 # STRETCH GOAL!
 #
@@ -58,14 +77,21 @@ for c in cities:
 # Tucson: (32.1558,-110.8777)
 # Salt Lake City: (40.7774,-111.9301)
 
+
 # TODO Get latitude and longitude values from the user
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
-  # within will hold the cities that fall within the specified region
+
+  #city should have lat => lowest lat, =< highest lat, same for lon
+  high_lat = max(lat1, lat2)
+  low_lat = min(lat1, lat2)
+  high_lon = max(lon1, lon2)
+  low_lon = min(lon1, lon2)
   within = []
-
-  # TODO Ensure that the lat and lon valuse are all floats
-  # Go through each city and check to see if it falls within 
-  # the specified coordinates.
-
+  for city in cities:
+    if city.lat >= low_lat and city.lat <= high_lat and city.lon >= low_lon and city.lon <= high_lon:
+      within.append(city)
+  
   return within
+
+cityreader_stretch(45, -100, 23, -120, cities)
